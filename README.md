@@ -9,3 +9,4 @@ for a Rubik's Cube solver. (This project will not solve Rubik's Cubes.)
 ## Dependencies
 
 `Python 2.7.12+` and the `python-opencv` package from Debian/Ubuntu repos or your distribution's equivalent.
+Install using sudo apt-get install libopencv-dev python-opencv
