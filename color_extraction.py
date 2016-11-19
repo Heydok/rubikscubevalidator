@@ -13,7 +13,13 @@ import cv2
 # image = cv2.imread(args['image'])
 
 image1 = cv2.imread('/home/akhan/Pictures/Webcam/2016-11-19-124734.jpg')
+image1 = cv2.bilateralFilter(image1, 9, 75, 75)
+image1 = cv2.fastNlMeansDenoisingColored(image1, None, 10, 10, 7, 21)
+hsv_i1 = cv2.cvtColor(image1, cv2.COLOR_BGR2HSV)
 image2 = cv2.imread('/home/akhan/Pictures/Webcam/2016-11-19-124741.jpg')
+image2 = cv2.bilateralFilter(image2, 9, 75, 75)
+image2 = cv2.fastNlMeansDenoisingColored(image2, None, 10, 10, 7, 21)
+hsv_i2 = cv2.cvtColor(image2, cv2.COLOR_BGR2HSV)
 
 # define list of boundaries
 boundaries = [
