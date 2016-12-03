@@ -11,18 +11,18 @@ def auto_canny(image, sigma=0.33):
 	return edged
 
 
-cap = cv2.VideoCapture(0)#Video cap object takes in the device # as a param
-#I'm assuming we both have only one camera on our laptops, so 0 is fine.
+cap = cv2.VideoCapture(0)  # Video cap object takes in the device # as a param
+# I'm assuming we both have only one camera on our laptops, so 0 is fine.
 
 if cap.isOpened():
 
 	while(True):
-		#Capture frame-by-frame
+		# Capture frame-by-frame
 		ret, frame = cap.read()
 		resized = imutils.resize(frame, width=250)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
-		#Our operations on the frame come here
+		# Our operations on the frame come here
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 
@@ -40,7 +40,7 @@ if cap.isOpened():
 				for c in cnts:
 					shape = sd.detect(c)
 					if shape == 'Square':
-						cv2.drawContours(resized, [c], -1, (0,255,0), 3)
+						cv2.drawContours(resized, [c], -1, (0,255,0), 2)
 				while(screen_cap):
 					cv2.imshow("Contour", resized)
 					if cv2.waitKey(1) & 0xFF == ord('x'):
@@ -53,7 +53,7 @@ if cap.isOpened():
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
 
-	#When everything done, release the Capture
+	# When everything done, release the Capture
 	cap.release()
 	cv2.destroyAllWindows()
 else:
