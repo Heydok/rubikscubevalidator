@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
 import imutils
-from modules.shapedetector import ShapeDetector
-from modules.colorlabeler import ColorLabeler
+from lib.shapedetector import ShapeDetector
+from lib.colorlabeler import ColorLabeler
 
 def auto_canny(image, sigma=0.33):
 	v = np.median(image)
