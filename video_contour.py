@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import imutils
 from modules.shapedetector import ShapeDetector
+from modules.colorlabeler import ColorLabeler
 
 def auto_canny(image, sigma=0.33):
 	v = np.median(image)
@@ -16,6 +17,9 @@ cap = cv2.VideoCapture(0)  # Video cap object takes in the device # as a param
 
 if cap.isOpened():
 
+	sd = ShapeDetector()
+	cl = ColorLabeler()
+
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
@@ -25,6 +29,7 @@ if cap.isOpened():
 		# Our operations on the frame come here
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
+		lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
 
 		im_binary = cv2.Canny(blurred, 30, 200)
 
@@ -36,11 +41,19 @@ if cap.isOpened():
 
 				cnts = cv2.findContours(im_binary.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 				cnts = cnts[0] if imutils.is_cv2() else cnts[1]
-				sd = ShapeDetector()
 				for c in cnts:
+					# Calculate the center of the contour.
+					M = cv2.moments(c)
+					cX = int((M["m10"] / M["m00"] + 1e-7) * ratio)
+					cY = int((M["m01"] / M["m00"] + 1e-7) * ratio)
+					# Detect the shape.
 					shape = sd.detect(c)
-					if shape == 'Square':
-						cv2.drawContours(resized, [c], -1, (0,255,0), 2)
+					if shape == 'Square':  # We only care about squares.
+						cv2.drawContours(resized, [c], -1, (0,255,0), 1)
+						color = cl.label(lab, c)
+						text = '{} {}'.format(color, shape)
+						cv2.putText(resized, text, (cX, cY),
+							cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 				while(screen_cap):
 					cv2.imshow("Contour", resized)
 					if cv2.waitKey(1) & 0xFF == ord('x'):
@@ -48,7 +61,7 @@ if cap.isOpened():
 						cv2.destroyWindow("Contour")
 
 		else:
-			cv2.imshow("Image", im_binary)
+			cv2.imshow("Video", resized)
 					
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
