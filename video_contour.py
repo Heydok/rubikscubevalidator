@@ -23,7 +23,7 @@ if cap.isOpened():
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
-		resized = imutils.resize(frame, width=360)
+		resized = imutils.resize(frame, width=260)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
 		# Our operations on the frame come here
