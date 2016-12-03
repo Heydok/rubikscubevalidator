@@ -8,5 +8,10 @@ for a Rubik's Cube solver. (This project will not solve Rubik's Cubes.)
 
 ## Dependencies
 
-`Python 2.7.12+` and the `python-opencv` package from Debian/Ubuntu repos or your distribution's equivalent.
-Install using sudo apt-get install libopencv-dev python-opencv
+We used the Python 2.7 version of Anaconda 4.2.0, available from [Continuum](https://www.continuum.io).
+
+After setup install [`opencv3`](https://anaconda.org/menpo/opencv3) and, [`imutils`](https://anaconda.org/stsci/imutils).
+
+## Running
+
+Run the Anaconda Python executable on `video_contour.py`
