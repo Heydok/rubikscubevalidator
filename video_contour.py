@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import imutils
-from shapedetector import ShapeDetector
+from modules.shapedetector import ShapeDetector
 
 def auto_canny(image, sigma=0.33):
 	v = np.median(image)
