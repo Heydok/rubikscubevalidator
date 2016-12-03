@@ -31,7 +31,7 @@ if cap.isOpened():
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
 
-		im_binary = cv2.Canny(blurred, 30, 200)
+		im_binary = cv2.Canny(resized, 20, 100)
 
 		(thresh, im_binary) = cv2.threshold(im_binary, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
@@ -43,25 +43,31 @@ if cap.isOpened():
 				cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 				for c in cnts:
 					# Calculate the center of the contour.
-					M = cv2.moments(c)
-					cX = int((M["m10"] / M["m00"] + 1e-7) * ratio)
-					cY = int((M["m01"] / M["m00"] + 1e-7) * ratio)
+					#M = cv2.moments(c)
+					#cX = int((M["m10"] / M["m00"] + 1e-7) * ratio)
+					#cY = int((M["m01"] / M["m00"] + 1e-7) * ratio)
 					# Detect the shape.
 					shape = sd.detect(c)
 					if shape == 'Square':  # We only care about squares.
+						x,y,w,h = cv2.boundingRect(c)
+						im_b_cpy = resized[y:y+h,x:x+w]
+						print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
 						cv2.drawContours(resized, [c], -1, (0,255,0), 1)
-						color = cl.label(lab, c)
-						text = '{} {}'.format(color, shape)
-						cv2.putText(resized, text, (cX, cY),
-							cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+						boundingRect = cv2.boundingRect(c)
+
+						#color = cl.label(lab, c)
+						#text = '{} {}'.format(color, shape)
+						#cv2.putText(resized, text, (cX, cY),
+							#cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 				while(screen_cap):
 					cv2.imshow("Contour", resized)
+					cv2.imshow("Square", im_b_cpy)
 					if cv2.waitKey(1) & 0xFF == ord('x'):
 						screen_cap = False
 						cv2.destroyWindow("Contour")
 
 		else:
-			cv2.imshow("Video", resized)
+			cv2.imshow("Video", gray)
 					
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
