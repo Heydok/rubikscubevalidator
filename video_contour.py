@@ -47,8 +47,8 @@ if cap.isOpened():
 					if shape == 'Square':  # We only care about squares.
 						x,y,w,h = cv2.boundingRect(c)
 						im_b_cpy = resized[y:y+h,x:x+w]
-						print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
-						cv2.drawContours(resized, [c], -1, (0,255,0), 1)
+						print("Found square.")
+						cv2.drawContours(resized, [c], -1, (0,255,0), 3)
 						boundingRect = cv2.boundingRect(c)
 				while(screen_cap):
 					cv2.imshow("Contour", resized)
