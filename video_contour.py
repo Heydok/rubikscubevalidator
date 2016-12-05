@@ -23,13 +23,13 @@ if cap.isOpened():
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
-		resized = imutils.resize(frame, width=250)
+		resized = imutils.resize(frame, width=260)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
 		# Our operations on the frame come here
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-		lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
+		# lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
 
 		im_binary = cv2.Canny(resized, 20, 100)
 
@@ -42,10 +42,6 @@ if cap.isOpened():
 				cnts = cv2.findContours(im_binary.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 				cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 				for c in cnts:
-					# Calculate the center of the contour.
-					#M = cv2.moments(c)
-					#cX = int((M["m10"] / M["m00"] + 1e-7) * ratio)
-					#cY = int((M["m01"] / M["m00"] + 1e-7) * ratio)
 					# Detect the shape.
 					shape = sd.detect(c)
 					if shape == 'Square':  # We only care about squares.
@@ -54,11 +50,6 @@ if cap.isOpened():
 						print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
 						cv2.drawContours(resized, [c], -1, (0,255,0), 1)
 						boundingRect = cv2.boundingRect(c)
-
-						#color = cl.label(lab, c)
-						#text = '{} {}'.format(color, shape)
-						#cv2.putText(resized, text, (cX, cY),
-							#cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 				while(screen_cap):
 					cv2.imshow("Contour", resized)
 					cv2.imshow("Square", im_b_cpy)
@@ -67,7 +58,8 @@ if cap.isOpened():
 						cv2.destroyWindow("Contour")
 
 		else:
-			cv2.imshow("Video", gray)
+
+			cv2.imshow("Live Feed", im_binary)
 					
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
@@ -75,5 +67,6 @@ if cap.isOpened():
 	# When everything done, release the Capture
 	cap.release()
 	cv2.destroyAllWindows()
+
 else:
 	print "ERROR! Videocapture didn't open for some godless reason"
