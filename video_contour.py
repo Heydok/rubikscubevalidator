@@ -23,7 +23,7 @@ if cap.isOpened():
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
-		resized = imutils.resize(frame, width=250)
+		resized = imutils.resize(frame, width=480)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
 		# Our operations on the frame come here
@@ -31,7 +31,8 @@ if cap.isOpened():
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
 
-		im_binary = cv2.Canny(resized, 20, 100)
+		# im_binary = cv2.Canny(resized, 20, 100)
+		im_binary = auto_canny(resized)
 
 		(thresh, im_binary) = cv2.threshold(im_binary, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
