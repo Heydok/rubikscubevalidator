@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
 import imutils
-from modules.shapedetector import ShapeDetector
-from modules.colorlabeler import ColorLabeler
+from lib.shapedetector import ShapeDetector
+from lib.colorlabeler import ColorLabeler
 
 def auto_canny(image, sigma=0.33):
 	v = np.median(image)
@@ -23,13 +23,13 @@ if cap.isOpened():
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
-		resized = imutils.resize(frame, width=260)
+		resized = imutils.resize(frame, width=250)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
 		# Our operations on the frame come here
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-		# lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
+		lab = cv2.cvtColor(resized, cv2.COLOR_BGR2LAB)
 
 		im_binary = cv2.Canny(resized, 20, 100)
 
@@ -58,8 +58,8 @@ if cap.isOpened():
 						cv2.destroyWindow("Contour")
 
 		else:
-
 			cv2.imshow("Live Feed", im_binary)
+
 					
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
@@ -67,6 +67,5 @@ if cap.isOpened():
 	# When everything done, release the Capture
 	cap.release()
 	cv2.destroyAllWindows()
-
 else:
 	print "ERROR! Videocapture didn't open for some godless reason"
