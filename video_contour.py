@@ -30,7 +30,7 @@ if cap.isOpened():
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		#lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
-		(thresh, im_binary) = cv2.threshold(blurred, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+		(thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
 
 		edged = cv2.Canny(im_binary, 30, 200)
 
@@ -46,14 +46,14 @@ if cap.isOpened():
 			shape = sd.detect(c)
 			if shape == 'Square':  # We only care about squares.
 				x,y,w,h = cv2.boundingRect(c)
-				im_b_cpy = resized[y:y+h,x:x+w]
+				current_square = resized[y:y+h,x:x+w]
 				#print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
-				cv2.drawContours(resized, [c], -1, (0,255,0), 1)
+				cv2.drawContours(resized, [c], -1, (0,255,0), 3)
 				bounding_box = cv2.boundingRect(c)
 				if cv2.waitKey(1) & 0xFF == ord('c'):
 					screen_cap = True
 					while(screen_cap):
-						cv2.imshow("Square", im_b_cpy)
+						cv2.imshow("Square", current_square)
 						if cv2.waitKey(1) & 0xFF == ord('x'):
 							screen_cap = False
 							cv2.destroyWindow("Contour")			
