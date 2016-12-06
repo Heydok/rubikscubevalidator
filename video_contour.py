@@ -30,37 +30,42 @@ if cap.isOpened():
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		#lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
+		(thresh, im_binary) = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-		im_binary = cv2.Canny(blurred, 30, 200)
+		edged = cv2.Canny(im_binary, 30, 200)
 
-		(thresh, im_binary) = cv2.threshold(im_binary, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-		cnts = cv2.findContours(im_binary.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+		cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 		cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 			#print(len(cnts))
 		#Sort the list from largest contours to smallest, and check only the first 10
 		#Ideally, there should only ever be 9, for each panel of a rubik face
-		cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:10]
-		for c in cnts:
-			# Detect the shape.
-			shape = sd.detect(c)
-			if shape == 'Square':  # We only care about squares.
-				x,y,w,h = cv2.boundingRect(c)
-				im_b_cpy = resized[y:y+h,x:x+w]
-				#print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
-				cv2.drawContours(resized, [c], -1, (0,255,0), 1)
-				bounding_box = cv2.boundingRect(c)
-				if cv2.waitKey(1) & 0xFF == ord('c'):
-					screen_cap = True
-					while(screen_cap):
-						cv2.imshow("Square", im_b_cpy)
-						if cv2.waitKey(1) & 0xFF == ord('x'):
-							screen_cap = False
-							cv2.destroyWindow("Contour")			
-		cv2.imshow("Live Feed", resized)
+		cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:9]
+		if len(cnts) == 9:
+			for c in cnts:
+				# Detect the shape.
+				shape = sd.detect(c)
+				if shape == 'Square':  # We only care about squares.
+					x,y,w,h = cv2.boundingRect(c)
+					im_b_cpy = resized[y:y+h,x:x+w]
+					#print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
+					cv2.drawContours(resized, [c], -1, (0,255,0), 5)
+					bounding_box = cv2.boundingRect(c)
 
-					
-		if cv2.waitKey(1) & 0xFF == ord('q'):
+			screen_cap = True
+			while(screen_cap):
+				cv2.imshow("Live Feed", resized)
+				cv2.imshow("Binary", im_binary)
+				cv2.imshow("Gray", gray)
+
+				#cv2.imshow("Square", im_b_cpy)
+				if cv2.waitKey(0) & 0xFF == ord('x'):
+					screen_cap = False
+		cv2.imshow("Live Feed", resized)
+		cv2.imshow("Binary", im_binary)
+		cv2.imshow("Gray", gray)
+			
+		if cv2.waitKey(5) & 0xFF == ord('q'):
 			break
 
 	# When everything done, release the Capture
