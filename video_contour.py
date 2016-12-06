@@ -4,6 +4,7 @@ import imutils
 from lib.shapedetector import ShapeDetector
 from lib.colorlabeler import ColorLabeler
 
+
 def auto_canny(image, sigma=0.33):
 	v = np.median(image)
 	lower = int(max(0, (1.0 - sigma) * v))
@@ -30,7 +31,8 @@ if cap.isOpened():
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		#lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
-		(thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
+		# (thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
+		(thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
 
 		edged = cv2.Canny(im_binary, 30, 200)
 
