@@ -23,9 +23,7 @@ if cap.isOpened():
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
-		resized = imutils.resize(frame, width=250)
-		pre_cnt_check_frame = resized
-
+		resized = imutils.resize(frame, width=360)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
 		# Our operations on the frame come here
@@ -51,7 +49,7 @@ if cap.isOpened():
 				im_b_cpy = resized[y:y+h,x:x+w]
 				#print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
 				cv2.drawContours(resized, [c], -1, (0,255,0), 1)
-				boundingRect = cv2.boundingRect(c)
+				bounding_box = cv2.boundingRect(c)
 				if cv2.waitKey(1) & 0xFF == ord('c'):
 					screen_cap = True
 					while(screen_cap):
