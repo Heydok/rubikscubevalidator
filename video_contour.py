@@ -31,8 +31,8 @@ if cap.isOpened():
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		#lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
-		# (thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
-		(thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
+		(thresh, im_binary) = cv2.threshold(blurred, 50, 120, cv2.THRESH_BINARY_INV)
+		#(thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
 
 		edged = cv2.Canny(im_binary, 30, 200)
 
@@ -42,13 +42,24 @@ if cap.isOpened():
 			#print(len(cnts))
 		#Sort the list from largest contours to smallest, and check only the first 10
 		#Ideally, there should only ever be 9, for each panel of a rubik face
-		cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:10]
+		cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:11]
+		square_count = 0
+
 		for c in cnts:
+			print len(cnts)
 			# Detect the shape.
 			shape = sd.detect(c)
 			if shape == 'Square':  # We only care about squares.
 				x,y,w,h = cv2.boundingRect(c)
 				current_square = resized[y:y+h,x:x+w]
+				width, height = current_square.shape[:2]
+				#print "w: ", width, " h: ", height
+				if width*height < 30:
+					#print "SKIP"
+					continue
+				else:
+					square_count = square_count + 1
+
 				#print("FOUND A SQUARE!!!!!!!!!!!!!!!!!!!")
 				cv2.drawContours(resized, [c], -1, (0,255,0), 3)
 				bounding_box = cv2.boundingRect(c)
@@ -57,8 +68,20 @@ if cap.isOpened():
 					while(screen_cap):
 						cv2.imshow("Square", current_square)
 						if cv2.waitKey(1) & 0xFF == ord('x'):
+							print y+h
 							screen_cap = False
-							cv2.destroyWindow("Contour")			
+							cv2.destroyWindow("Contour")
+		print "Squares: ", square_count
+		if square_count == 9:
+			print "9 squares"
+			square_count_nine = True
+			while(square_count_nine):
+				cv2.imshow("9_Squares_Detected", resized)
+				if cv2.waitKey(1) & 0xFF == ord('x'):
+					square_count_nine = False
+				if not square_count_nine:
+					cv2.destroyWindow("9_Squares_Detected")
+
 		cv2.imshow("Live Feed", resized)
 		cv2.imshow("Binary", im_binary)
 		cv2.imshow("Gray", gray)
