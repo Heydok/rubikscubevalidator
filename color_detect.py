@@ -36,7 +36,7 @@ if cap.isOpened():
 		(thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
 
 		# edged = cv2.Canny(im_binary, 30, 200)
-		edged = auto_canny(im_binary)
+		edged = auto_canny(lab)
 
 
 		cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -61,7 +61,8 @@ if cap.isOpened():
 				c = c.astype("float")
 				c *= ratio
 				c = c.astype("int")
-				text = "{} {}".format(color, shape)
+				# text = "{} {}".format(color, shape)
+				text = color
 				cv2.putText(resized, text, (cX, cY),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
