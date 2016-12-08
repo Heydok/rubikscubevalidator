@@ -13,8 +13,11 @@ class ColorLabeler:
         'red': (255,0,0),
         'green': (0,255,0),
         'blue': (0,0,255),
-        'light_blue': (110,50,50),
-        'dark_blue': (130,255,255)})
+        'yellow': (255,255,0),
+        'green': (60,255,0),
+        # 'light_blue': (110,50,50),
+        # 'dark_blue': (130,255,255)
+        })
     
         # Allocate memory for the L*a*b* image, then initialize the
         # color names list
