@@ -62,7 +62,7 @@ if cap.isOpened():
 				c *= ratio
 				c = c.astype("int")
 				text = "{} {}".format(color, shape)
-				cv2.putText(lab, text, (cX, cY),
+				cv2.putText(resized, text, (cX, cY),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
 				if cv2.waitKey(1) & 0xFF == ord('c'):
@@ -73,9 +73,9 @@ if cap.isOpened():
 							screen_cap = False
 							cv2.destroyWindow("Contour")			
 		cv2.imshow("Live Feed", resized)
-		cv2.imshow("Binary", im_binary)
-		cv2.imshow("Gray", gray)
-		cv2.imshow("L*a*b*", lab)
+		# cv2.imshow("Binary", im_binary)
+		# cv2.imshow("Gray", gray)
+		# cv2.imshow("L*a*b*", lab)
 					
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
