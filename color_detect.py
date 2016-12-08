@@ -24,17 +24,19 @@ if cap.isOpened():
 	while(True):
 		# Capture frame-by-frame
 		ret, frame = cap.read()
-		resized = imutils.resize(frame, width=720)
+		resized = imutils.resize(frame, width=360)
 		ratio = frame.shape[0] / float(resized.shape[0])
 
 		# Our operations on the frame come here
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-		#lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
+		lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+		lab = imutils.resize(lab, width=360)
 		# (thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
 		(thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
 
-		edged = cv2.Canny(im_binary, 30, 200)
+		# edged = cv2.Canny(im_binary, 30, 200)
+		edged = auto_canny(lab)
 
 
 		cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -46,6 +48,10 @@ if cap.isOpened():
 			# Detect the shape.
 			shape = sd.detect(c)
 			if shape == 'Square':  # We only care about squares.
+				M = cv2.moments(c)
+				cX = int((M["m10"] / M["m00"]) * ratio)
+				cY = int((M["m01"] / M["m00"]) * ratio)
+				color = cl.label(lab, c)
 				x,y,w,h = cv2.boundingRect(c)
 				current_square = resized[y:y+h,x:x+w]
 				cv2.drawContours(resized, [c], -1, (0,255,0), 3)
@@ -60,6 +66,7 @@ if cap.isOpened():
 		cv2.imshow("Live Feed", resized)
 		cv2.imshow("Binary", im_binary)
 		cv2.imshow("Gray", gray)
+		cv2.imshow("L*a*b*", lab)
 					
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
