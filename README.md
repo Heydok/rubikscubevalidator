@@ -15,3 +15,8 @@ After setup install [`opencv3`](https://anaconda.org/menpo/opencv3) and, [`imuti
 ## Running
 
 Run the Anaconda Python executable on `video_contour.py`
+
+## Acknowledgements
+* Used information from [Adrian Rosenbrock's pyimagesearch tutorials](http://www.pyimagesearch.com/2016/02/15/determining-object-color-with-opencv/)
+* Used OpenCV [documentation](http://docs.opencv.org/3.1.0/dd/d49/tutorial_py_contour_features.html)
+* [Wikipedia article on CIELAB color space](https://en.wikipedia.org/wiki/Lab_color_space#Advantages)
