@@ -31,11 +31,13 @@ if cap.isOpened():
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
 		lab = imutils.resize(lab, width=720)
-		(thresh, im_binary) = cv2.threshold(blurred, 50, 120, cv2.THRESH_BINARY_INV)
-		# (thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
+		# (thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
+		(thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
 
 		# edged = cv2.Canny(im_binary, 30, 200)
-		edged = auto_canny(im_binary)
+		# edged = auto_canny(im_binary)
+		edged = cv2.Canny(lab, 30, 200)
+		# edged = auto_canny(lab)
 
 		cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 		cnts = cnts[0] if imutils.is_cv2() else cnts[1]
