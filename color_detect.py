@@ -26,29 +26,39 @@ if cap.isOpened():
 		ret, frame = cap.read()
 		resized = imutils.resize(frame, width=720)
 		ratio = frame.shape[0] / float(resized.shape[0])
-
 		# Our operations on the frame come here
 		gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 		blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 		lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
 		lab = imutils.resize(lab, width=720)
-		(thresh, im_binary) = cv2.threshold(blurred, 50, 100, cv2.THRESH_BINARY_INV)
+		(thresh, im_binary) = cv2.threshold(blurred, 50, 120, cv2.THRESH_BINARY_INV)
 		# (thresh, im_binary) = cv2.threshold(blurred, 100, 250, cv2.THRESH_BINARY)
 
 		# edged = cv2.Canny(im_binary, 30, 200)
 		edged = auto_canny(im_binary)
 
-
 		cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 		cnts = cnts[0] if imutils.is_cv2() else cnts[1]
-		# Sort the list from largest contours to smallest, and check only the first 10
-		# Ideally, there should only ever be 9, for each panel of a rubik face
-		cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:10]
+			#print(len(cnts))
+		#Sort the list from largest contours to smallest, and check only the first 10
+		#Ideally, there should only ever be 9, for each panel of a rubik face
+		cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:11]
+		square_count = 0
+
 		for c in cnts:
 			# Detect the shape.
 			shape = sd.detect(c)
 			if shape == 'Square':  # We only care about squares.
 				x,y,w,h = cv2.boundingRect(c)
+				current_square = resized[y:y+h,x:x+w]
+				width, height = current_square.shape[:2]
+				#print "w: ", width, " h: ", height
+				if width*height < 30:
+					#print "SKIP"
+					continue
+				else:
+					square_count = square_count + 1
+
 				current_square = resized[y:y+h,x:x+w]
 				cv2.drawContours(resized, [c], -1, (0,255,0), 3)
 				bounding_box = cv2.boundingRect(c)
@@ -74,6 +84,17 @@ if cap.isOpened():
 							screen_cap = False
 							cv2.destroyWindow("Contour")			
 		cv2.imshow("Live Feed", resized)
+		if square_count == 9:
+			print "9 squares"
+			square_count_nine = True
+			while(square_count_nine):
+				cv2.imshow("9_Squares_Detected", resized)
+				if cv2.waitKey(1) & 0xFF == ord('x'):
+					square_count_nine = False
+				if not square_count_nine:
+					cv2.destroyWindow("9_Squares_Detected")
+
+
 		# cv2.imshow("Binary", im_binary)
 		# cv2.imshow("Gray", gray)
 		# cv2.imshow("L*a*b*", lab)
