@@ -1,5 +1,10 @@
 #!/usr/bin/env python2
 
+'''
+Code taken from pyimagesearch
+http://www.pyimagesearch.com/2016/02/15/determining-object-color-with-opencv/
+'''
+
 from scipy.spatial import distance as dist
 from collections import OrderedDict
 import numpy as np

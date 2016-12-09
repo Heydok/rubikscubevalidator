@@ -1,5 +1,10 @@
 #!/usr/bin/env python2
 
+'''
+Taken from pyimagesearch
+http://www.pyimagesearch.com/2016/02/08/opencv-shape-detection/
+'''
+
 import cv2
 
 class ShapeDetector:
