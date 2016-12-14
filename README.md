@@ -14,7 +14,7 @@ After setup install [`opencv3`](https://anaconda.org/menpo/opencv3) and, [`imuti
 
 ## Running
 
-Run the Anaconda Python executable on `video_contour.py`
+Run the Anaconda Python executable on `color_detect.py`
 
 ## Acknowledgements
 * Used information from [Adrian Rosenbrock's pyimagesearch tutorials](http://www.pyimagesearch.com/2016/02/15/determining-object-color-with-opencv/)
